@@ -55,6 +55,7 @@
           # Include libraries in buildInputs
           buildInputs = with pkgs; [
             rust-analyzer
+            rustfmt
             toolchain
             pkg-config
             alsa-lib
