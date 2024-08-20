@@ -19,7 +19,7 @@ async fn spawn_radio() -> Result<()> {
 
     let client = Client::builder().request_icy_metadata().build()?;
 
-    let stream = HttpStream::new(client, "https://stream.gensokyoradio.net/1".parse()?).await?;
+    let stream = HttpStream::new(client, "https://stream.gensokyoradio.net/3".parse()?).await?;
 
     let icy_headers = IcyHeaders::parse_from_headers(stream.headers());
     if log_enabled!(Level::Debug) {
@@ -27,9 +27,9 @@ async fn spawn_radio() -> Result<()> {
         debug!("content type={:?}\n", stream.content_type());
     }
 
-    // buffer 20 seconds of audio
-    // bitrate (in kilobits) / bits per byte * bytes per kilobyte * 20 seconds
-    let prefetch_bytes = icy_headers.bitrate().unwrap() / 8 * 1024 * 20;
+    // buffer 30 seconds of audio
+    // bitrate (in kilobits) / bits per byte * bytes per kilobyte * 30 seconds
+    let prefetch_bytes = icy_headers.bitrate().unwrap() / 8 * 1024 * 30;
 
     let reader = StreamDownload::from_stream(
         stream,
@@ -52,7 +52,7 @@ async fn spawn_radio() -> Result<()> {
             // Since we requested icy metadata, the metadata interval header should be present in the
             // response. This will allow us to parse the metadata within the stream
             icy_headers.metadata_interval(),
-            |metadata| println!("{metadata:#?}\n"),
+            |metadata| println!("{metadata:?}\n"),
         ))
         .context("Failed to decode audio from metadata")?,
     );
