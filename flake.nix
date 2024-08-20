@@ -28,12 +28,13 @@
       in rec {
         defaultPackage = packages.${system};
 
-        packages.${system} = naersk'.buildPackage rec {
+        packages.${system} = naersk'.buildPackage {
           src = ./.;
           strctDeps = true;
 
           buildInputs = with pkgs; [
             alsa-lib
+            openssl
           ];
 
           nativeBuildInputs = with pkgs; [
@@ -57,6 +58,7 @@
             toolchain
             pkg-config
             alsa-lib
+            openssl
           ];
 
           LD_LIBRARY_PATH = "${pkgs.lib.makeLibraryPath buildInputs}";
